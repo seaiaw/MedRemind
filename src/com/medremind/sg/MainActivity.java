@@ -1,14 +1,14 @@
 package com.medremind.sg;
 
-import java.io.File;
-
-import com.midnight.lockii.terminal.R;
+import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
@@ -33,8 +33,8 @@ public class MainActivity extends Activity {
         	public void onClick(View v) {
         		 	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         	        
-        	        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        	        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+//        	        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+//    	        	cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         	        
         	        startActivityForResult(cameraIntent, CAPTURE_IMAGE);
         	}
@@ -63,9 +63,24 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    /**
+     * 
+     */
     private void dispatchCameraIntent(int actionCode){
     	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	startActivityForResult(cameraIntent, actionCode);
+    }
+    
+    /**
+     * 
+     */
+    public static boolean isIntentAvailable(Context context, String action){
+    	final PackageManager packageManager = context.getPackageManager();
+    	final Intent intent  = new Intent(action);
+    	List<ResolveInfo> list
+    		= packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+    	
+    	return list.size() > 0;
     }
     
 }
